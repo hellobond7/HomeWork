@@ -29,7 +29,7 @@ namespace HomeWork_Structures
         static void Main(string[] args)
         {
             FileInfo path = new FileInfo(@"Notebook.csv");
-            Note Notebook = new Note();
+            Note Notebook = new Note(path.ToString());
             Notebook.Menu(path);
             Console.ReadKey();
         }

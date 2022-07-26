@@ -30,9 +30,12 @@ namespace HomeWork_Structures
         /// <summary>
         /// Конструктор
         /// </summary>
-        public Note()
+        public Note(string path)
         {
-            
+            this.path = path;
+            CheckFile();
+            this.ID = CountOfPerson();
+            PersonList = new List<Person>();
         }
 
         /// <summary>
@@ -76,10 +79,10 @@ namespace HomeWork_Structures
             FileInfo fileInf = new FileInfo(path);
             if (fileInf.Exists == false)
             {
-                fileInf.Create(); ///создание пустого файла
+                fileInf.Create().Close(); ///создание пустого файла
             }
         }
-
+        
         /// <summary>
         /// Метод чтения записей из файла и запись в коллекцию для дальнейшего взаимодействия
         /// </summary>
@@ -132,12 +135,16 @@ namespace HomeWork_Structures
         private int CountOfPerson()
         {
             int count = 0;///инициализация переменной счетчика количества записей в записной книжке
-            using (StreamReader strReader = new StreamReader("Notebook.csv")) ///объявление потока чтения
+            using (StreamReader strReader = new StreamReader(path)) ///объявление потока чтения
                 while (!strReader.EndOfStream)
                 {
                     strReader.ReadLine(); ///чтение строки из файла
                     count++; ///увеличение счетчика
                 }
+            if (count == 0)
+            {
+                Console.WriteLine("В записной книжке нет ни одной записи!"); ///вывод сообщения, если файл пустой
+            }
             return count;
         }
 
@@ -232,35 +239,45 @@ namespace HomeWork_Structures
                             Console.Write("\nВведите новый ID: ");
                             int.TryParse(Console.ReadLine(), out int tempID);
                             item.ID = tempID;
-                            Console.WriteLine($"\nИнформация о пользователе:\n{item}\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
+                            Console.WriteLine($"\nИнформация о пользователе:" +
+                                              $"\n{item}" +
+                                              $"\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
                             break;
 
                         case 2:
                             Console.Write("\nВведите новое имя: ");
                             string tempName = Console.ReadLine();
                             item.Name = tempName;
-                            Console.WriteLine($"\nИнформация о пользователе:\n{item}\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
+                            Console.WriteLine($"\nИнформация о пользователе:" +
+                                              $"\n{item}" +
+                                              $"\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы                       
                             break;
 
                         case 3:
                             Console.Write("\nВведите новый возраст: ");
                             int.TryParse(Console.ReadLine(), out int tempAge);
                             item.Age = tempAge;
-                            Console.WriteLine($"\nИнформация о пользователе:\n{item}\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
+                            Console.WriteLine($"\nИнформация о пользователе:" +
+                                              $"\n{item}" +
+                                              $"\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы               
                             break;
 
                         case 4:
                             Console.Write("\nВведите новый рост: ");
                             int.TryParse(Console.ReadLine(), out int tempHeight);
                             item.Height = tempHeight;
-                            Console.WriteLine($"\nИнформация о пользователе:\n{item}\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
+                            Console.WriteLine($"\nИнформация о пользователе:" +
+                                              $"\n{item}" +
+                                              $"\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
                             break;
 
                         case 5:
                             Console.Write("Введите новую дату рождения: ");
                             DateTime.TryParse(Console.ReadLine(), out DateTime tempBirthDay);
                             item.BirthDay = tempBirthDay;
-                            Console.WriteLine($"Информация о пользователе:\n{item}\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
+                            Console.WriteLine($"\nИнформация о пользователе:" +
+                                              $"\n{item}" +
+                                              $"\nУспешно изменена!\n"); ///вывод измененной записи и сообщения об успешном выполнении программы
                             break;
 
                         case 6:
@@ -344,6 +361,7 @@ namespace HomeWork_Structures
                         /*УДАЛЕНИЕ ЗАПИСИ*/
                         case 3:
                             //StreamReaderFromFile(); ///вызов метода чтения информации о пользователях из файла
+
                             ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
                             Console.Write("\n1 - Очистить список" +
                                           "\n2 - Выборочное удаление" +
@@ -353,8 +371,9 @@ namespace HomeWork_Structures
                             {
                                 case 1:
                                     path.Delete(); ///удаление файла
-                                    //CheckFile(); ///вызов метода проверки существования файла. Если файла не существует - то он создается
-                                    ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
+                                    Console.WriteLine("Список очищен!");
+                                    //System.Threading.Thread.Sleep(5000); /// задержка на 5 сек
+                                    //ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
 
                                     ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
                                     continue;
