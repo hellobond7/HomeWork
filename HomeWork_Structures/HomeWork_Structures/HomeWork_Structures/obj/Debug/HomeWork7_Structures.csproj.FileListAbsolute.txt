@@ -1,0 +1,8 @@
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\bin\Debug\HomeWork_Structures.exe.config
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\bin\Debug\HomeWork_Structures.exe
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\bin\Debug\HomeWork_Structures.pdb
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\obj\Debug\HomeWork7_Structures.csproj.AssemblyReference.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\obj\Debug\HomeWork7_Structures.csproj.SuggestedBindingRedirects.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\obj\Debug\HomeWork7_Structures.csproj.CoreCompileInputs.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\obj\Debug\HomeWork_Structures.exe
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork_Structures\HomeWork_Structures\HomeWork_Structures\obj\Debug\HomeWork_Structures.pdb

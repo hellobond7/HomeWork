@@ -5,93 +5,112 @@ using System.Text;
 
 namespace HomeWork_Structures
 {
+    #region Заметки
+    ///Разобраться с количеством пользователей и ID
+    ///Разобраться с выводом списка на экран
+    #endregion
+
     internal class Note
     {
         /// <summary>
         /// Коллекция для хранения пользователей
         /// </summary>
-        public List<Person> PersonList;
+        private List<Person> _personList;
 
         /// <summary>
         /// Переменная для хранения информации о пользователе
         /// </summary>
-        private Person person;
+        private Person _person;
 
         /// <summary>
-        /// Путь к файлу с данными
+        /// Путь к файлу с данными о пользователях
         /// </summary>
-        private string path;
+        private FileInfo _fileAdressForNotebook;
 
         /// <summary>
-        /// Количество пользователей в записной книжке
+        /// Путь к файлу с данными о количестве пользователей
         /// </summary>
-        private int ID;
+        private FileInfo _fileAdressForCountOfPerson;
+
+        /// <summary>
+        /// Последний занятый номер ID в записной книжке
+        /// </summary>
+        private int _ID;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public Note(string path)
+        public Note(FileInfo fileAdress, FileInfo fileAdressForCountOfPerson)
         {
-            this.path = path;
-            CheckFile();
-            this.ID = CountOfPerson();
-            PersonList = new List<Person>();
+            _fileAdressForNotebook = fileAdress;
+            _fileAdressForCountOfPerson = fileAdressForCountOfPerson;
+            CheckFile(); ///вызов метода проверки существования файла
+            _ID = CountOfPerson();
+            _personList = new List<Person>();
         }
 
         /// <summary>
         /// Метод добавления нового пользователя
         /// </summary>
-        private void AddPerson()
+        public void AddPerson()
         {
-            ID++; ///увеличение счетчика
-            person = new Person(ID); /// инициализация переменной типа Person
-            LoadToFile(person);
+            _ID++; ///увеличение счетчика
+            _person = new Person(_ID); /// инициализация переменной типа Person
+            LoadToFile(_person); ///вызов метода записи нового пользователя
         }
 
         /// <summary>
-        /// Метод записи добавления информации о новом пользователе в текстовый файл
+        /// Метод записи информации о новом пользователе в текстовый файл
         /// </summary>
         /// <param name="newPerson">Новый пользователь</param>
-        private void LoadToFile(Person newPerson)
+        public void LoadToFile(Person newPerson)
         {
-            using (StreamWriter strWriter = new StreamWriter(path, true, Encoding.Unicode)) ///объявление потока записи
-                strWriter.WriteLine(newPerson.ToString()); ///запись информации о пользователе в файл
-        }
+            using (StreamWriter strWriterNotebook = new StreamWriter(_fileAdressForNotebook.ToString(), true, Encoding.Unicode)) ///объявление потока записи
+                strWriterNotebook.WriteLine(newPerson.ToString()); ///запись информации о пользователе в файл
+
+            using (StreamWriter strWriterCountOfPerson = new StreamWriter(_fileAdressForCountOfPerson.ToString(), false, Encoding.Unicode)) ///объявление потока записи
+                strWriterCountOfPerson.WriteLine(_ID); ///запись информации о пользователе в файл
+}
 
         /// <summary>
         /// Метод перезаписи информации о пользователях в текстовый файл
         /// </summary>
-        /// <param name="PersonList">Коллекция хранящая список пользователей</param>
-        private void ReloadToFile(List<Person> PersonList)
+        public void ReloadToFile()
         {
-            using (StreamWriter strWriter = new StreamWriter(path, false, Encoding.Unicode)) ///объявление потока записи
-                foreach (var dir in PersonList)
+            using (StreamWriter strWriterForNotebook = new StreamWriter(_fileAdressForNotebook.ToString(), false, Encoding.Unicode)) ///объявление потока записи
+                foreach (var dir in _personList)
                 {
-                    strWriter.WriteLine(dir.ToString()); ///запись строки в файл
+                    strWriterForNotebook.WriteLine(dir.ToString()); ///запись строки в файл
                 }
+            using (StreamWriter strWriterCountOfPerson = new StreamWriter(_fileAdressForCountOfPerson.ToString(), false, Encoding.Unicode)) ///объявление потока записи
+                strWriterCountOfPerson.WriteLine(_ID); ///запись информации о пользователе в файл
         }
 
         /// <summary>
         /// Метод проверки существования файла. Если файла не существует - то он создается
         /// </summary>
-        private void CheckFile()
+        public void CheckFile()
         {
-            FileInfo fileInf = new FileInfo(path);
-            if (fileInf.Exists == false)
+            FileInfo fileInfNotebook = new FileInfo(_fileAdressForNotebook.ToString());
+            if (fileInfNotebook.Exists == false)
             {
-                fileInf.Create().Close(); ///создание пустого файла
+                fileInfNotebook.Create().Close(); ///создание пустого файла
+            }
+            FileInfo fileInfCountOfPerson = new FileInfo(_fileAdressForCountOfPerson.ToString());
+            if (fileInfCountOfPerson.Exists == false)
+            {
+                fileInfCountOfPerson.Create().Close(); ///создание пустого файла
             }
         }
-        
+
         /// <summary>
         /// Метод чтения записей из файла и запись в коллекцию для дальнейшего взаимодействия
         /// </summary>
-        /// <param name="PersonList"></param>
-        private void ReadFromFileForEditing(List<Person> PersonList)
+        public void ReadFileForEditing()
         {
             char[] delimiter = new char[] { '\t' }; /// инициализация массива разделителей
-            PersonList.Clear();
-            using (StreamReader strReader = new StreamReader(path)) ///объявление потока чтения
+            _personList.Clear();
+            using (StreamReader strReader = new StreamReader(_fileAdressForNotebook.ToString())) ///объявление потока чтения
                 while (!strReader.EndOfStream)
                 {
                     string inputString = strReader.ReadLine(); ///инициализация переменной для хранения строки с информацией о пользователе
@@ -106,18 +125,18 @@ namespace HomeWork_Structures
                     string tempPlaceOfBirth = inputEntry[6];
 
                     Person person = new Person(tempID, tempDate, tempName, tempAge, tempHeight, tempBirthDay, tempPlaceOfBirth);
-                    PersonList.Add(person);
+                    _personList.Add(person);
                 }
         }
 
         /// <summary>
-        /// Метод чтения информации о пользователе из файла
+        /// Метод чтения информации о пользователе из файла и вывод на экран
         /// </summary>
-        private void ReadFromFile()
+        public void ReadFileAndPrintToConsole()
         {
             CheckFile();
             int count = 0; ///инициализация переменной счетчика количества записей в записной книжке
-            using (StreamReader strReader = new StreamReader(path)) ///объявление потока чтения
+            using (StreamReader strReader = new StreamReader(_fileAdressForNotebook.ToString())) ///объявление потока чтения
                 while (!strReader.EndOfStream)
                 {
                     Console.WriteLine(strReader.ReadLine()); ///чтение файла построчно и вывод на экран
@@ -132,50 +151,45 @@ namespace HomeWork_Structures
         /// <summary>
         /// Метод чтения информации о количестве записей в файле
         /// </summary>
-        private int CountOfPerson()
+        /// <returns>Число записей в записной книжке</returns>
+        public int CountOfPerson()
         {
             int count = 0;///инициализация переменной счетчика количества записей в записной книжке
-            using (StreamReader strReader = new StreamReader(path)) ///объявление потока чтения
+            using (StreamReader strReader = new StreamReader(_fileAdressForCountOfPerson.ToString())) ///объявление потока чтения
                 while (!strReader.EndOfStream)
                 {
-                    strReader.ReadLine(); ///чтение строки из файла
-                    count++; ///увеличение счетчика
+                    int.TryParse(strReader.ReadLine(), out count);
                 }
-            if (count == 0)
-            {
-                Console.WriteLine("В записной книжке нет ни одной записи!"); ///вывод сообщения, если файл пустой
-            }
             return count;
         }
 
         /// <summary>
         /// Удаления информации о пользователе по его ID
         /// </summary>
-        /// <param name="PersonList">Коллекция хранящая информацию о пользователях</param>
         /// <param name="ID">ID пользователя информацию о котором необходимо удалить</param>
-        private void RemoveEntryFromFile(List<Person> PersonList, int ID)
+        public void RemoveEntryFromFile(int ID)
         {
-            ReadFromFileForEditing(PersonList); ///вывод на экран полного списка пользователей
+            ReadFileForEditing(); ///вывод на экран полного списка пользователей
             int count = 0; ///инициализация счетчика
 
-            foreach (var item in PersonList)
+            foreach (var item in _personList)
             {
                 if (item.ID == ID)
                 {
-                    PersonList.RemoveAt(count); ///удаление записи из коллекции
+                    _personList.RemoveAt(count); ///удаление записи из коллекции
                     Console.WriteLine($"Информация о пользователе:\n{item}\nУспешно удалена!\n"); ///вывод удаляемой
                                                                                                   ///и сообщения об успешном выполнении программы
                     break;
                 }
                 count++;
             }
-            ReloadToFile(PersonList); ///перезапись нового списка в файл
+            ReloadToFile(); ///перезапись нового списка в файл
         }
 
         /// <summary>
         /// Возврат на главный экран меню
         /// </summary>
-        private void ReturnToMenu(out char toMenu)
+        public void ReturnToMenu(out char toMenu)
         {
             while (true)
             {
@@ -192,7 +206,7 @@ namespace HomeWork_Structures
         /// Повтор действия
         /// </summary>
         /// <param name="toContinue"></param>
-        private void RepeatAction(out char toContinue)
+        public void RepeatAction(out char toContinue)
         {
             while (true)
             {
@@ -208,12 +222,11 @@ namespace HomeWork_Structures
         /// <summary>
         /// Сортировка списка по выбранному диапазону дат
         /// </summary>
-        /// <param name="PersonList">Коллекция хранящая информацию о пользователях</param>
         /// <param name="rangeStart">Начало диапазона</param>
         /// <param name="endOfRange">Конец диапазона</param>
-        private void SortNote(List<Person> PersonList, DateTime rangeStart, DateTime endOfRange)
+        public void SortNote(DateTime rangeStart, DateTime endOfRange)
         {
-            foreach (var item in PersonList)
+            foreach (var item in _personList)
             {
                 if (item.BirthDay > rangeStart && item.BirthDay < endOfRange) ///условие проверки соответствия заданным условиям
                 {
@@ -225,11 +238,10 @@ namespace HomeWork_Structures
         /// <summary>
         /// Метод изменения информации о пользователе
         /// </summary>
-        /// <param name="PersonList">Коллекция хранящая информацию о пользователях</param>
         /// <param name="ID">ID пользователя информацию о котором необходимо изменить</param>
-        private void UserEditing(List<Person> PersonList, int ID, byte ChoiseForEditing)
+        public void UserEditing(int ID, byte ChoiseForEditing)
         {
-            foreach (var item in PersonList)
+            foreach (var item in _personList)
             {
                 if (item.ID == ID)
                 {
@@ -295,227 +307,20 @@ namespace HomeWork_Structures
                     }
                 }
             }
-            ReloadToFile(PersonList); ///перезапись нового списка в файл
+            ReloadToFile(); ///перезапись нового списка в файл
         }
 
         /// <summary>
-        /// Вызов меню
+        /// Метод вывода коллекции в консоль
         /// </summary>
-        /// <param name="path">Файл для сохранения записной книжки</param>
-        public void Menu(FileInfo path)
+        public void PrintList()
         {
-            Console.Clear();
-            char toContinue; ///переменная для выбора действия для продолжения действий внутри меню
-            char toMenu = 'y'; ///переменная возврата в меню
-            this.path = path.ToString();
-            while (true)
+            foreach (var item in _personList)
             {
-                //Note Notebook = new Note(fileInf.ToString());
-                if (char.ToLower(toMenu) == 'y')
-                {
-                    Console.Clear(); ///очистка экрана
-
-                    ///основное меню
-                    Console.Write("1 - Просмотр записи:" +
-                                "\n2 - Создание записи" +
-                                "\n3 - Удаление записи" +
-                                "\n4 - Редактирование записи" +
-                                "\n5 - Загрузка записей в выбранном диапазоне дат" +
-                                "\n6 - Сортировка записей" +
-                                "\nВыбор: ");
-                    sbyte.TryParse(Console.ReadLine(), out sbyte choise); ///choise - переменная для выбора действий в основном меню
-                    Console.Clear(); ///очистка экрана
-
-                    switch (choise)
-                    {
-                        /*ПРОСМОТР ЗАПИСИ*/
-                        case 1:
-
-                            ReadFromFile();///вызов метода чтения информации о пользователях из файла
-                            ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-
-                            continue;
-
-                        /*СОЗДАНИЕ ЗАПИСИ*/
-                        case 2:
-                            do
-                            {
-                                Console.Clear(); ///очистка экрана
-
-                                AddPerson(); ///запись нового пользователя
-
-                                ///результат выполнения действия
-                                //Console.WriteLine($"Данные записаны во внешний файл!" +
-                                //                $"\nФайл можно найти по адресу:{fileInf.DirectoryName}");
-                                Console.WriteLine($"Данные записаны во внешний файл!" +
-                                                $"\nФайл можно найти по адресу:{path.DirectoryName}");
-
-                                Console.Write($"\nДобавить нового пользователя? y/n "); ///запрос повторения
-                                char.TryParse(Console.ReadLine(), out toContinue);
-
-                            } while (char.ToLower(toContinue) == 'y');
-
-                            ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                            continue;
-
-                        /*УДАЛЕНИЕ ЗАПИСИ*/
-                        case 3:
-                            //StreamReaderFromFile(); ///вызов метода чтения информации о пользователях из файла
-
-                            ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-                            Console.Write("\n1 - Очистить список" +
-                                          "\n2 - Выборочное удаление" +
-                                          "\nВыбор: ");
-                            byte.TryParse(Console.ReadLine(), out byte choiseDel);
-                            switch (choiseDel)
-                            {
-                                case 1:
-                                    path.Delete(); ///удаление файла
-                                    Console.WriteLine("Список очищен!");
-                                    //System.Threading.Thread.Sleep(5000); /// задержка на 5 сек
-                                    //ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-
-                                    ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                                    continue;
-
-                                case 2:
-                                    do
-                                    {
-                                        Console.Write($"\nКакую запись вы хотите удалить?" +
-                                                      $"\nВведите ID:");
-                                        int.TryParse(Console.ReadLine(), out int ID);
-
-                                        //RemoveEntryFromFile(PersonList, ID); ///вызов метода удаления записи из файла
-                                        RemoveEntryFromFile(PersonList, ID); ///вызов метода удаления записи из файла
-
-                                        //StreamReaderFromFile(); ///вызов метода чтения информации о пользователях из файла
-                                        ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-
-                                        Console.Write($"\nПродолжить удаление? y/n "); ///запрос повторения
-                                        char.TryParse(Console.ReadLine(), out toContinue);
-
-                                    } while (char.ToLower(toContinue) == 'y');
-
-                                    ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                                    continue;
-                                default:
-                                    Console.Write("Не выбран ни один из предложенных вариантов. " +
-                                                "\nПродолжить? y/n ");
-                                    char.TryParse(Console.ReadLine(), out toMenu);
-                                    continue;
-                            }
-
-                        /*РЕДАКТИРОВАНИЕ ЗАПИСИ*/
-                        case 4:
-
-                            if (CountOfPerson() == 0)
-                            {
-                                Console.WriteLine("В записной книжке нет записей. Сделайте первую запись");
-                                ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                                continue;
-                            }
-                            else
-                            {
-                                do
-                                {
-                                    Console.Clear(); ///очистка экрана
-
-                                    ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-                                    ReadFromFileForEditing(PersonList);
-
-                                    Console.Write($"\nНапишите ID пользователя информацию о котором вы хотите изменить: ");
-                                    bool suc = int.TryParse(Console.ReadLine(), out int choiseID); ///инициализация переменной выбора ID
-                                    if (!suc)
-                                    {
-                                        Console.Write("\nНе выбран ни один вариант из списка!" +
-                                                      "\nПовторите ввод. Нажмите любую клавишу!");
-                                        Console.ReadKey();
-                                        toContinue = 'y';
-                                        continue;
-                                    }
-
-                                    Console.Write($"\nКакое поле вы хотите изменить?" +
-                                                  $"\n1 - ID" +
-                                                  $"\n2 - Имя пользователя" +
-                                                  $"\n3 - Возраст" +
-                                                  $"\n4 - Рост" +
-                                                  $"\n5 - Дата рождения" +
-                                                  $"\n6 - Место рождения");
-                                    Console.Write("\nВыбор: ");
-                                    byte.TryParse(Console.ReadLine(), out byte choiseForEditing);
-
-                                    UserEditing(PersonList, choiseID, choiseForEditing); ///вызов метода редактирования записи
-
-                                    Console.Write($"Хотите изменить что-то еще? y/n "); ///запрос повторения
-                                    char.TryParse(Console.ReadLine(), out toContinue);
-
-                                } while (char.ToLower(toContinue) == 'y');
-
-                                ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                                continue;
-                            }
-
-                        /*ЗАГРУЗКА ЗАПИСЕЙ В ВЫБРАННОМ ДИАПАЗОНЕ ДАТ*/
-                        case 5:
-                            ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-
-                            Console.Write("В каком диапазоне дат вы хотите посмотреть записи?" +
-                                        "\nФормат ввода даты - ДД.ММ.ГГГГ");
-
-                            Console.Write("\nНачало диапазона: ");
-                            DateTime.TryParse(Console.ReadLine(), out DateTime rangeStart);
-                            Console.Write("Конец диапазона: ");
-                            DateTime.TryParse(Console.ReadLine(), out DateTime endOfRange);
-
-                            SortNote(PersonList, rangeStart, endOfRange); ///сортировка списка по выбранному диапазону дат
-                            ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-
-                            continue;
-
-                        /*СОРТИРОВКА ЗАПИСЕЙ*/
-                        case 6:
-
-                            do
-                            {
-                                Console.Clear(); ///очистка экрана
-
-                                ReadFromFile(); ///вызов метода чтения информации о пользователях из файла
-                                ReadFromFileForEditing(PersonList); ///вызов метода для вывода на экран полного списка пользователей
-
-                                Console.Write($"\nПо какому полю хотите отсортировать список?" +
-                                              $"\n1 - ID" +
-                                              $"\n2 - Дата создания" +
-                                              $"\n3 - Имя пользователя" +
-                                              $"\n4 - Возраст" +
-                                              $"\n5 - Рост" +
-                                              $"\n6 - Дата рождения" +
-                                              $"\n7 - Место рождения");
-                                Console.Write("\nВыбор: ");
-                                byte.TryParse(Console.ReadLine(), out byte choise1);
-
-                                PersonList.Sort(new Sort(choise1)); ///сортировка списка по выбранному значению
-
-                                foreach (var item in PersonList)
-                                {
-                                    Console.WriteLine(item);
-                                }
-
-                                RepeatAction(out toContinue); ///вызов метода с запросов повтора действия
-
-                            } while (char.ToLower(toContinue) == 'y');
-
-                            ReturnToMenu(out toMenu); ///вызов метода возврата на главный экран
-                            continue;
-
-                        /*ВЫВОД ДЕФОЛТНОГО ЗНАЧЕНИЯ*/
-                        default:
-                            Console.Write("Не выбран ни один из предложенных вариантов. Продолжить? y/n");
-                            char.TryParse(Console.ReadLine(), out toMenu);
-                            continue;
-                    }
-                }
-                break;
+                Console.WriteLine(item);
             }
         }
+
+
     }
 }

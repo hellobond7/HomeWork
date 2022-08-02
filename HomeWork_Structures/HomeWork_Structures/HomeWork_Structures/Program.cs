@@ -28,9 +28,10 @@ namespace HomeWork_Structures
     {
         static void Main(string[] args)
         {
-            FileInfo path = new FileInfo(@"Notebook.csv");
-            Note Notebook = new Note(path.ToString());
-            Notebook.Menu(path);
+            FileInfo fileAdressForNotebook = new FileInfo(@"Notebook.csv");
+            FileInfo fileAdressForCountOfPerson = new FileInfo(@"CountOfPerson.csv");
+            Menu menu = new Menu(fileAdressForNotebook,fileAdressForCountOfPerson);
+            menu.MainMenu();
             Console.ReadKey();
         }
     }
