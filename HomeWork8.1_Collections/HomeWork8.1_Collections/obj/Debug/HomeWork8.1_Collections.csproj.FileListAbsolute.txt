@@ -1,0 +1,8 @@
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\bin\Debug\HomeWork8.1_Collections.exe.config
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\bin\Debug\HomeWork8.1_Collections.exe
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\bin\Debug\HomeWork8.1_Collections.pdb
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\obj\Debug\HomeWork8.1_Collections.csproj.AssemblyReference.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\obj\Debug\HomeWork8.1_Collections.csproj.SuggestedBindingRedirects.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\obj\Debug\HomeWork8.1_Collections.csproj.CoreCompileInputs.cache
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\obj\Debug\HomeWork8.1_Collections.exe
+C:\Users\abyou\YandexDisk\!!main_salt\C# Project\HomeWork\HomeWork8_Collections\HomeWork8.1_Collections\HomeWork8.1_Collections\obj\Debug\HomeWork8.1_Collections.pdb
